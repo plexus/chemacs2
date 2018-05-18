@@ -22,7 +22,16 @@
 ;; ~/.emacs-profiles.el , with a single "default" profile
 ;;
 ;;     (("default" . ((user-emacs-directory . "~/.emacs.d"))))
-
+;;
+;; Now you can start emacs with `--with-profile' to pick a specific profile. A
+;; more elaborate example:
+;;
+;;     (("default"                      . ((user-emacs-directory . "~/emacs-profiles/plexus")))
+;;      ("spacemacs"                    . ((user-emacs-directory . "~/github/spacemacs")
+;;                                         (server-name . "spacemacs")
+;;                                         (custom-file . "~/.spacemacs.d/custom.el")
+;;                                         (env . (("SPACEMACSDIR" . "~/.spacemacs.d"))))))
+;;
 
 ;; ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ;; this must be here to keep the package system happy, normally you do
@@ -74,7 +83,8 @@
     ;; Start the actual initialization
     (load init-file)
 
-    ;; Prevent customize from changing ~/.emacs (this file)
+    ;; Prevent customize from changing ~/.emacs (this file), but if init.el has
+    ;; set a value for custom-file then don't touch it.
     (when (not custom-file)
       (setq custom-file custom-file-)
       (load custom-file))))
@@ -85,17 +95,15 @@
         (chemacs-load-profile (cadr args))
       (chemacs-check-command-line-args (cdr args)))))
 
+;; This is just a no-op so Emacs knows --with-profile is a valid option. If we
+;; wait for command-switch-alist to be processed then after-init-hook has
+;; already run.
+(add-to-list 'command-switch-alist '("--with-profile" .
+                                     (lambda (_) (pop command-line-args-left))))
+
 ;; Check for a --with-profile flag and honor it
 (chemacs-check-command-line-args command-line-args)
 
 ;; Or if none given, load the "default" profile
 (when (not (member "--with-profile" command-line-args))
   (chemacs-load-profile "default"))
-
-
-;; If we wait for command-switch-alist then after-init-hook has already run,
-;; this is just a no-op so Emacs knows --with-profile is a valid option
-(add-to-list 'command-switch-alist '("--with-profile" .
-                                     (lambda (_) (pop command-line-args-left))))
-
-(provide '.emacs)
