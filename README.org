@@ -62,10 +62,10 @@ Think of it as a bootloader for Emacs.
 
 ** Rationale
 
-Emacs configuration is either kept in a ~~/.emacs~ file or, more commonly, in a
+Emacs configuration is either kept in a ~\~/.emacs~ file or, more commonly, in a
 ~/.emacs.d~ directory. These paths are hard-coded. If you want to try out
 someone else's configuration, or run different distributions like Prelude or
-Spacemacs, then you either need to swap out ~~/.emacs.d~, or run Emacs with a
+Spacemacs, then you either need to swap out ~\~/.emacs.d~, or run Emacs with a
 different ~HOME~ directory set.
 
 This last approach is quite common, but has some real drawbacks, since now
@@ -92,7 +92,7 @@ $ ./install.sh
 OK      Creating symlink ~/.emacs -> /home/arne/chemacs/.emacs
 #+END_SRC
 
-The install script will symlink ~~/.emacs~ to the Chemacs script. If you
+The install script will symlink ~\~/.emacs~ to the Chemacs script. If you
 already have a ~/.emacs~ you need to move it out of the way first
 
 #+BEGIN_SRC shell
@@ -107,11 +107,11 @@ would cause a chicken and egg problem.
 ** Usage
 
 Chemacs adds an extra command line option to Emacs, ~--with-profile~. Profiles
-are configured in ~~/.emacs-profiles.el~. If this file does not exist
-Chemacs will create it with a default profile pointing at ~~/.emacs.d~.
+are configured in ~\~/.emacs-profiles.el~. If this file does not exist
+Chemacs will create it with a default profile pointing at ~\~/.emacs.d~.
 
 If no profile is given at the command line then the default profile is used, so
-if you currently have your emacs configuration in ~~/.emacs.d~ then Chemacs
+if you currently have your emacs configuration in ~\~/.emacs.d~ then Chemacs
 will, by default, use your existing configuration.
 
 #+BEGIN_SRC shell
@@ -151,8 +151,8 @@ for a helpful script to do that.
 
 ** Spacemacs
 
-Spacemacs is typically installed by cloning the Spacemacs repo to ~~/.emacs.d~,
-and doing extra customization from ~~/.spacemacs~ or ~/.spacemacs.d/init.el~.
+Spacemacs is typically installed by cloning the Spacemacs repo to ~\~/.emacs.d~,
+and doing extra customization from ~\~/.spacemacs~ or ~/.spacemacs.d/init.el~.
 This makes it tedious to switch between version of Spacemacs, or between
 different Spacemacs configurations.
 
