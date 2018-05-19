@@ -62,11 +62,11 @@ Think of it as a bootloader for Emacs.
 
 ** Rationale
 
-Emacs configuration is either kept in a ~\~/.emacs~ file or, more commonly, in a
-~/.emacs.d~ directory. These paths are hard-coded. If you want to try out
+Emacs configuration is either kept in a =~/.emacs= file or, more commonly, in a
+~/.emacs.d= directory. These paths are hard-coded. If you want to try out
 someone else's configuration, or run different distributions like Prelude or
-Spacemacs, then you either need to swap out ~\~/.emacs.d~, or run Emacs with a
-different ~HOME~ directory set.
+Spacemacs, then you either need to swap out =~/.emacs.d=, or run Emacs with a
+different =$HOME= directory set.
 
 This last approach is quite common, but has some real drawbacks, since now
 packages will no longer know where your actual home directory is.
@@ -83,7 +83,7 @@ various edge cases and use cases that come up.
 
 ** Installation
 
-Clone the Git repository, and run ~install.sh~
+Clone the Git repository, and run =install.sh=
 
 #+BEGIN_SRC shell
 $ git clone https://github.com/plexus/chemacs.git
@@ -92,26 +92,26 @@ $ ./install.sh
 OK      Creating symlink ~/.emacs -> /home/arne/chemacs/.emacs
 #+END_SRC
 
-The install script will symlink ~\~/.emacs~ to the Chemacs script. If you
-already have a ~/.emacs~ you need to move it out of the way first
+The install script will symlink =~/.emacs= to the Chemacs script. If you
+already have a =~/.emacs= you need to move it out of the way first
 
 #+BEGIN_SRC shell
 $ ./install.sh
 WARN    chemacs can't be installed, ~/.emacs is in the way
 #+END_SRC
 
-By symlinking you can easily update Chemacs with a ~git pull~. Chemacs is not
+By symlinking you can easily update Chemacs with a =git pull=. Chemacs is not
 available on ELPA/MELPA because its special position in the Emacs boot process
 would cause a chicken and egg problem.
 
 ** Usage
 
-Chemacs adds an extra command line option to Emacs, ~--with-profile~. Profiles
-are configured in ~\~/.emacs-profiles.el~. If this file does not exist
-Chemacs will create it with a default profile pointing at ~\~/.emacs.d~.
+Chemacs adds an extra command line option to Emacs, =--with-profile=. Profiles
+are configured in =~/.emacs-profiles.el=. If this file does not exist
+Chemacs will create it with a default profile pointing at =~/.emacs.d=.
 
 If no profile is given at the command line then the default profile is used, so
-if you currently have your emacs configuration in ~\~/.emacs.d~ then Chemacs
+if you currently have your emacs configuration in =~/.emacs.d= then Chemacs
 will, by default, use your existing configuration.
 
 #+BEGIN_SRC shell
@@ -123,41 +123,41 @@ $ emacs --with-profile my-profile
 This file contains an association list, with the keys/cars being the profile
 names, and the values/cdrs their configuration.
 
-The main thing to configure is the ~user-emacs-directory~
+The main thing to configure is the =user-emacs-directory=
 
 #+BEGIN_SRC emacs-lisp
   (("default" . ((user-emacs-directory . "~/.emacs.d")))
    ("spacemacs" . ((user-emacs-directory . "~/spacemacs"))))
 #+END_SRC
 
-Chemacs will set this to be the ~user-emacs-directory~ in use, and load
-~init.el~ from that directory.
+Chemacs will set this to be the =user-emacs-directory= in use, and load
+=init.el= from that directory.
 
 Other things you can configure
 
-- ~custom-file~ : The file where Customize stores its customizations. If this
-  isn't configured, and the ~custom-file~ variable is still unset after loading
-  the profile's ~init.el~, then this will get set to the profile's ~init.el~
-- ~server-name~ : Sets the ~server-name~ variable, so you can distinguish multiple
-  instances with ~emacsclient -s <server-name>~.
-- ~env~ An association list of environment variables. These will get set before
+- =custom-file= : The file where Customize stores its customizations. If this
+  isn't configured, and the =custom-file= variable is still unset after loading
+  the profile's =init.el=, then this will get set to the profile's =init.el=
+- =server-name= : Sets the =server-name= variable, so you can distinguish multiple
+  instances with =emacsclient -s <server-name>=.
+- =env= An association list of environment variables. These will get set before
   loading the profile, so they can influence the initialization, and they are
   visible to any subprocesses spawned from Emacs.
 
-Store ~.emacs-profile.el~ together with your dotfiles. If you're not yet keeping
+Store =.emacs-profile.el= together with your dotfiles. If you're not yet keeping
 a version controlled directory of dotfiles, then check out
 [connect-the-dots](https://github.com/plexus/dotfiles/blob/master/connect-the-dots)
 for a helpful script to do that.
 
 ** Spacemacs
 
-Spacemacs is typically installed by cloning the Spacemacs repo to ~\~/.emacs.d~,
-and doing extra customization from ~\~/.spacemacs~ or ~/.spacemacs.d/init.el~.
+Spacemacs is typically installed by cloning the Spacemacs repo to =~/.emacs.d=,
+and doing extra customization from =~/.spacemacs= or =~/.spacemacs.d/init.el=.
 This makes it tedious to switch between version of Spacemacs, or between
 different Spacemacs configurations.
 
-With Chemacs you can point your ~user-emacs-directory~ to wherever you have
-Spacemacs installed, and use the ~SPACEMACSDIR~ environment variable to point at
+With Chemacs you can point your =user-emacs-directory= to wherever you have
+Spacemacs installed, and use the =SPACEMACSDIR= environment variable to point at
 a directory with customizations that are applied on top of the base install.
 
 #+BEGIN_SRC emacs-lisp
