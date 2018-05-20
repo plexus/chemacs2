@@ -53,7 +53,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun chemacs-get-emacs-profile (profile)
-  (alist-get profile chemacs-emacs-profiles nil nil #'equal))
+  (cdr (assoc profile chemacs-emacs-profiles)))
 
 (defun chemacs-emacs-profile-key (key &optional default)
   (alist-get key (chemacs-get-emacs-profile chemacs-current-emacs-profile)
