@@ -63,7 +63,7 @@ Think of it as a bootloader for Emacs.
 ** Rationale
 
 Emacs configuration is either kept in a =~/.emacs= file or, more commonly, in a
-~/.emacs.d= directory. These paths are hard-coded. If you want to try out
+=~/.emacs.d= directory. These paths are hard-coded. If you want to try out
 someone else's configuration, or run different distributions like Prelude or
 Spacemacs, then you either need to swap out =~/.emacs.d=, or run Emacs with a
 different =$HOME= directory set.
