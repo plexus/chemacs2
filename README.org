@@ -171,6 +171,20 @@ a directory with customizations that are applied on top of the base install.
                   (env . (("SPACEMACSDIR" . "~/my-spacemacs-config"))))))
 #+END_SRC
 
+** DOOM emacs
+
+You can add an entry similar to the following to your =.emacs-profiles.el=
+
+In the following snippet =~/doom-emacs= is where you have cloned doom emacs.
+
+(Depending on when you read this) =DOOMDIR= support is only in =develop= branch of doom emacs. Check commit history of =master= branch of doom emacs
+
+#+BEGIN_SRC emacs-lisp
+("doom" . ((user-emacs-directory . "~/doom-emacs")
+           (env . (("DOOMDIR" . "~/doom-config")))))
+#+END_SRC
+
+Please refer to [[https://github.com/plexus/chemacs/issues/5][this]] discussion for details.
 ** LICENSE
 
 Copyright © Arne Brasseur 2018
