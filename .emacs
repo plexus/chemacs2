@@ -32,6 +32,9 @@
 ;;                                         (custom-file . "~/.spacemacs.d/custom.el")
 ;;                                         (env . (("SPACEMACSDIR" . "~/.spacemacs.d"))))))
 ;;
+;; If you want to change the default profile used (so that, for example, a
+;; GUI version of Emacs uses the profile you want), you can also put the name
+;; of that profile in a ~/.emacs-profile file
 
 ;; ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ;; this must be here to keep the package system happy, normally you do
@@ -39,6 +42,7 @@
 ;; (package-initialize)
 
 (setq chemacs-profiles-path "~/.emacs-profiles.el")
+(setq chemacs-default-profile-path "~/.emacs-profile")
 
 (when (not (file-exists-p chemacs-profiles-path))
   (with-temp-file chemacs-profiles-path
@@ -49,6 +53,14 @@
         (insert-file-contents chemacs-profiles-path)
         (goto-char (point-min))
         (read (current-buffer))))
+
+(setq chemacs-default-profile
+      (if (file-exists-p chemacs-default-profile-path)
+          (with-temp-buffer
+            (insert-file-contents chemacs-default-profile-path)
+            (goto-char (point-min))
+            (read (current-buffer)))
+        "default"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -106,4 +118,4 @@
 
 ;; Or if none given, load the "default" profile
 (when (not (member "--with-profile" command-line-args))
-  (chemacs-load-profile "default"))
+  (chemacs-load-profile (chemacs-default-profile)))

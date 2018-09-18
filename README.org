@@ -149,6 +149,36 @@ a version controlled directory of dotfiles, then check out
 [[https://github.com/plexus/dotfiles/blob/master/connect-the-dots][connect-the-dots]]
 for a helpful script to do that.
 
+** Changing the default profile (e.g. for GUI editors)
+
+Where it is not possible to use the =--with-profile= flag, the default profile
+can be set using a =~/.emacs-profile= file.
+
+If your =~/.emacs-profiles.el= file contains the following:
+
+#+BEGIN_SRC emacs-lisp
+  (("default" . ((user-emacs-directory . "~/.emacs.d")))
+   ("spacemacs" . ((user-emacs-directory . "~/spacemacs")
+   ("prelude" . ((user-emacs-directory . "~/prelude"))))
+#+END_SRC
+
+you can create a file called =~/.emacs-profile=, containing the name of the
+profile you'd like to be used when none is given on the command line:
+
+#+BEGIN_SRC shell
+$ echo 'spacemacs' > ~/.emacs-profile
+#+END_SRC
+
+This will set the default profile to be the "spacemacs" profile, instead of
+"default". You can change the default by simply changing the contents of this
+file:
+
+#+BEGIN_SRC shell
+$ echo 'prelude' > ~/.emacs-profile
+#+END_SRC
+
+If this file doesn't exist, then "default" will be used, as before.
+
 ** Spacemacs
 
 Spacemacs is typically installed by cloning the Spacemacs repo to =~/.emacs.d=,
