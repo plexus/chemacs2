@@ -59,7 +59,7 @@
           (with-temp-buffer
             (insert-file-contents chemacs-default-profile-path)
             (goto-char (point-min))
-            (read (current-buffer)))
+            (symbol-name (read (current-buffer))))
         "default"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
