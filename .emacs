@@ -1,3 +1,5 @@
+;;; .emacs --- -*- lexical-binding: t; -*-
+;;; Commentary:
 ;; ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ;;
 ;;       ___           ___           ___           ___           ___           ___           ___
@@ -23,7 +25,7 @@
 ;;
 ;;     (("default" . ((user-emacs-directory . "~/.emacs.d"))))
 ;;
-;; Now you can start emacs with `--with-profile' to pick a specific profile. A
+;; Now you can start Emacs with `--with-profile' to pick a specific profile. A
 ;; more elaborate example:
 ;;
 ;;     (("default"                      . ((user-emacs-directory . "~/emacs-profiles/plexus")))
@@ -41,28 +43,30 @@
 ;; `package-initialize' for real in your own init.el
 ;; (package-initialize)
 
-(setq chemacs-profiles-path "~/.emacs-profiles.el")
-(setq chemacs-default-profile-path "~/.emacs-profile")
+;;; Code:
+(defvar chemacs-profiles-path "~/.emacs-profiles.el")
+(defvar chemacs-default-profile-path "~/.emacs-profile")
 
 (when (not (file-exists-p chemacs-profiles-path))
   (with-temp-file chemacs-profiles-path
     (insert "((\"default\" . ((user-emacs-directory . \"~/.emacs.d\"))))")))
 
-(setq chemacs-emacs-profiles
-      (with-temp-buffer
-        (insert-file-contents chemacs-profiles-path)
-        (goto-char (point-min))
-        (read (current-buffer))))
-
-(setq chemacs-default-profile
-      (if (file-exists-p chemacs-default-profile-path)
-          (with-temp-buffer
-            (insert-file-contents chemacs-default-profile-path)
-            (goto-char (point-min))
-            (symbol-name (read (current-buffer))))
-        "default"))
+(defvar chemacs-emacs-profiles
+  (with-temp-buffer
+    (insert-file-contents chemacs-profiles-path)
+    (goto-char (point-min))
+    (read (current-buffer))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun chemacs-detect-default-profile ()
+  (if (file-exists-p chemacs-default-profile-path)
+      (with-temp-buffer
+        (insert-file-contents chemacs-default-profile-path)
+        (goto-char (point-min))
+        ;; (buffer-string))
+        (symbol-name (read (current-buffer)) ))
+    "default"))
 
 (defun chemacs-get-emacs-profile (profile)
   (cdr (assoc profile chemacs-emacs-profiles)))
@@ -118,4 +122,7 @@
 
 ;; Or if none given, load the "default" profile
 (when (not (member "--with-profile" command-line-args))
-  (chemacs-load-profile (chemacs-default-profile)))
+  (chemacs-load-profile (chemacs-detect-default-profile)))
+
+(provide '.emacs)
+;;; .emacs ends here
