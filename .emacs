@@ -106,23 +106,34 @@
       (load custom-file))))
 
 (defun chemacs-check-command-line-args (args)
-  (when args
-    (if (equal (car args) "--with-profile")
-        (chemacs-load-profile (cadr args))
-      (chemacs-check-command-line-args (cdr args)))))
+  (if args
+      ;; Handle either `--with-profile profilename' or
+      ;; `--with-profile=profilename'
+      (let ((s (split-string (car args) "=")))
+        (cond ((equal (car args) "--with-profile")
+               ;; This is just a no-op so Emacs knows --with-profile
+               ;; is a valid option. If we wait for
+               ;; command-switch-alist to be processed then
+               ;; after-init-hook has already run.
+               (add-to-list 'command-switch-alist
+                            '("--with-profile" .
+                              (lambda (_) (pop command-line-args-left))))
+               ;; Load the profile
+               (chemacs-load-profile (cadr args)))
 
-;; This is just a no-op so Emacs knows --with-profile is a valid option. If we
-;; wait for command-switch-alist to be processed then after-init-hook has
-;; already run.
-(add-to-list 'command-switch-alist '("--with-profile" .
-                                     (lambda (_) (pop command-line-args-left))))
+              ;; Similar handling for `--with-profile=profilename'
+              ((equal (car s) "--with-profile")
+               (add-to-list 'command-switch-alist `(,(car args) . (lambda (_))))
+               (chemacs-load-profile (mapconcat 'identity (cdr s) "=")))
 
-;; Check for a --with-profile flag and honor it
+              (t (chemacs-check-command-line-args (cdr args)))))
+
+    ;; If no profile given, load the "default" profile
+    (chemacs-load-profile (chemacs-detect-default-profile))))
+
+;; Check for a --with-profile flag and honor it; otherwise load the
+;; default profile.
 (chemacs-check-command-line-args command-line-args)
-
-;; Or if none given, load the "default" profile
-(when (not (member "--with-profile" command-line-args))
-  (chemacs-load-profile (chemacs-detect-default-profile)))
 
 (provide '.emacs)
 ;;; .emacs ends here
