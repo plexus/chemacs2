@@ -158,7 +158,7 @@ If your =~/.emacs-profiles.el= file contains the following:
 
 #+BEGIN_SRC emacs-lisp
   (("default" . ((user-emacs-directory . "~/.emacs.d")))
-   ("spacemacs" . ((user-emacs-directory . "~/spacemacs")
+   ("spacemacs" . ((user-emacs-directory . "~/spacemacs")))
    ("prelude" . ((user-emacs-directory . "~/prelude"))))
 #+END_SRC
 
