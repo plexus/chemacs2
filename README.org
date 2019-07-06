@@ -217,6 +217,6 @@ In the following snippet =~/doom-emacs= is where you have cloned doom emacs.
 Please refer to [[https://github.com/plexus/chemacs/issues/5][this]] discussion for details.
 ** LICENSE
 
-Copyright © Arne Brasseur 2018
+Copyright © Arne Brasseur 2018-2019
 
 Distributed under the terms of the GPL v3.
