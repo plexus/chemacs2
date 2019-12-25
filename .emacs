@@ -68,6 +68,21 @@
         (symbol-name (read (current-buffer)) ))
     "default"))
 
+(defun chemacs-load-straight ()
+  (defvar bootstrap-version)
+  (let ((bootstrap-file (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun chemacs-get-emacs-profile (profile)
   (cdr (assoc profile chemacs-emacs-profiles)))
 
@@ -95,6 +110,9 @@
     (mapcar (lambda (env)
               (setenv (car env) (cdr env)))
             (chemacs-emacs-profile-key 'env))
+
+    (when (chemacs-emacs-profile-key 'straight-p)
+      (chemacs-load-straight))
 
     ;; Start the actual initialization
     (load init-file)
