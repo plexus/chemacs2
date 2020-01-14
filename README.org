@@ -143,8 +143,8 @@ Other things you can configure
 - =env= An association list of environment variables. These will get set before
   loading the profile, so they can influence the initialization, and they are
   visible to any subprocesses spawned from Emacs.
-- =straight-p= Enable the [Straight](https://github.com/raxod502/straight.el)
-  functional package manager
+- =straight-p= Enable the [[https://github.com/raxod502/straight.el][Straight]]
+  functional package manager.
 
 Store =.emacs-profile.el= together with your dotfiles. If you're not yet keeping
 a version controlled directory of dotfiles, then check out
