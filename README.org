@@ -146,7 +146,7 @@ Other things you can configure
 - =straight-p= Enable the [[https://github.com/raxod502/straight.el][Straight]]
   functional package manager.
 
-Store =.emacs-profile.el= together with your dotfiles. If you're not yet keeping
+Store =.emacs-profiles.el= together with your dotfiles. If you're not yet keeping
 a version controlled directory of dotfiles, then check out
 [[https://github.com/plexus/dotfiles/blob/master/connect-the-dots][connect-the-dots]]
 for a helpful script to do that.
