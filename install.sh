@@ -1,42 +1,40 @@
-#!/bin/bash
+#!/bin/sh
 
-function main() {
-    if [[ -L "$HOME/.emacs" ]]; then
+chemacs_path=$(realpath "$(dirname "$0")")
+
+main() {
+    if [ -L "$HOME/.emacs" ]; then
         check_existing_symlink
     else
         create_symlink_if_possible
     fi
 }
 
-function check_existing_symlink() {
-    local target=$(readlink -f $HOME/.emacs)
+check_existing_symlink() {
+    target=$(readlink -f "$HOME/.emacs")
 
-    if [[ "$target" != "`chemacs_home`.emacs" ]]; then
+    if [ "$target" != "$chemacs_path/.emacs" ]; then
         warn "~/.emacs symlink points elsewhere -> $target"
     else
         ok "chemacs already linked, you're all good."
     fi
 }
 
-function create_symlink_if_possible() {
-    if [[ -e "$HOME/.emacs" ]]; then
+create_symlink_if_possible() {
+    if [ -e "$HOME/.emacs" ]; then
         warn "chemacs can't be installed, ~/.emacs is in the way"
     else
-        ok "Creating symlink ~/.emacs -> `chemacs_home`.emacs"
-        ln -s "`chemacs_home`.emacs" "$HOME"
+        ok "Creating symlink ~/.emacs -> $chemacs_path/.emacs"
+        ln -s "$chemacs_path/.emacs" "$HOME"
     fi
 }
 
-function chemacs_home() {
-    cd `dirname "${BASH_SOURCE[0]}"` && echo "`pwd`/$1"
+warn() {
+    printf "WARN\t%s\n" "$1"
 }
 
-function warn() {
-    echo -e "WARN\t$1"
+ok()   {
+    printf "OK\t%s\n" "$1"
 }
-function ok()   {
-    echo -e "OK\t$1"
-}
-
 
 main
