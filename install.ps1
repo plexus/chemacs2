@@ -48,7 +48,7 @@ If (-Not (Test-Path -Path $EmacsPath)) {
         }
 
         If ($should_write) {
-            Copy-Item $ChemacsPath $EmacsPath | Out-Null
+            Copy-Item $ChemacsPath $EmacsPath
             Write-Host "OK updated chemacs files successfully."
         } Else {
             Write-Host "WARN took no action."
