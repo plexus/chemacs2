@@ -4,7 +4,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$ChemacsPath = Split-Path $PSCommandPath
+$ChemacsPath = Join-Path (Split-Path $PSCommandPath) ".emacs"
 
 Try {
   Set-Variable -Scope global EmacsPath $(
@@ -20,148 +20,25 @@ Try {
   )
 }
 
-function Get-Hashes {
-    param(
-        [string] $Directory
-    )
-    $hashes = @{}
-
-    Get-ChildItem -Recurse $Directory | ForEach-Object {
-      $relative = $_.FullName.Substring($Directory.length)
-      $hashes[$relative] = (Get-FileHash $_.FullName).Hash
-    }
-
-    $hashes
-}
-
-function Get-Intersection {
-    param(
-      [hashtable] $Left,
-      [hashtable] $Right
-    )
-
-    $elements = @()
-
-    ForEach ($elem in $Left.Keys) {
-        If ($Right.ContainsKey($elem)) {
-            $elements += $elem
-        }
-    }
-
-    $elements
-}
-
-function Get-Difference {
-    param(
-      [hashtable] $Left,
-      [hashtable] $Right
-    )
-
-    $elements = @()
-
-    ForEach ($elem in $Left.Keys) {
-        If (-Not $Right.ContainsKey($elem)) {
-            $elements += $elem
-        }
-    }
-
-    $elements
-}
-
-class Comparison {
-  [string] $file
-  [string] $SourceFile
-  [string] $DestinationFile
-  [string] $Status
-}
-
-function Compare-Directories {
-    param(
-        [string]$SourceDirectory,
-        [string]$DestinationDirectory,
-        [switch]$Hidden = $False
-    )
-
-    $sourceHashes = Get-Hashes -Directory $SourceDirectory -Hidden:$Hidden
-    $destinationHashes = Get-Hashes -Directory $DestinationDirectory -Hidden:$Hidden
-
-    # Files that are in both directories and may have gotten updates
-    $sharedFiles = Get-Intersection -Left $sourceHashes -Right $destinationHashes
-    # Potentially files that are "new" in the source directory
-    $newFiles = Get-Difference -Left $sourceHashes -Right $destinationHashes
-    # Potentially files that got deleted in the source directory
-    $oldFiles = Get-Difference -Left $destinationHashes -Right $sourceHashes
-    
-    $results = @()
-
-    ForEach ($file in $sharedFiles) {
-      $comparison = [Comparison]::new()
-      $comparison.File = $file
-      $comparison.SourceFile = Join-Path $SourceDirectory $file
-      $comparison.DestinationFile = Join-Path $DestinationDirectory $file
-      If ($sourceHashes[$file] -Eq $destinationHashes[$file]) {
-        $comparison.Status = "current"
-      } Else {
-        $comparison.Status = "updated"
-      }
-
-      $results += $comparison
-    }
-
-    ForEach ($file in $NewFiles) {
-      $comparison = [Comparison]::new()
-      $comparison.File = $file
-      $comparison.SourceFile = Join-Path $SourceDirectory $file
-      $comparison.DestinationFile = Join-Path $DestinationDirectory $file
-      $comparison.Status = "new"
-
-      $results += $comparison
-    }
-
-    ForEach ($file in $OldFiles) {
-        $comparison = [Comparison]::new()
-        $comparison.File = $file
-        $comparison.SourceFile = Join-Path $SourceDirectory $file
-        $comparison.DestinationFile = Join-Path $DestinationDirectory $file
-        $comparison.Status = "deleted"
-
-      $results += $comparison
-    }
-
-    $results
-}
-
 If (-Not (Test-Path -Path $EmacsPath)) {
     # In Windows, symlinks require admin privileges, so we copy the
-    # directory wholesale instead.
-    Write-Host "OK copying files into ~/.emacs..."
+    # file wholesale instead.
+    Write-Host "OK copying file to ~/.emacs..."
 
-    New-Item -ItemType Directory -Path $EmacsPath | Out-Null
-
-    # The .git folder should be hidden and therefore not copied in this
-    # action. Copy-Item -Recurse naively picks those up, so we have to be a
-    # little more clever.
-    Get-ChildItem $ChemacsPath -Recurse | ForEach-Object {
-      $dest = Join-Path $EmacsPath ($_.FullName.Substring($ChemacsPath.length))
-      Copy-Item $_.FullName $dest
-      
-    }
+    Copy-Item $ChemacsPath $EmacsPath
 } Else {
-    # Because we copied the directory, we have to attempt to be smart about
-    # detecting changes, so we do *this* song and dance
-    $comparisons = Compare-Directories -SourceDirectory $ChemacsPath -DestinationDirectory $EmacsPath
-
-    If (($comparisons | ForEach-Object { $_.Status -Eq "current" }) -contains $False) {
-        Write-Host ("WARN content is different between {0} and {1}:" -f @($EmacsPath, $ChemacsPath))
-        $comparisons | ForEach-Object {
-            Write-Host ("WARN {0} - {1}" -f @($_.File, $_.Status))
-        }
-
+    # Because we copied the file instead of symlinking it, we have to try to
+    # detect changes with hashing instead...
+    If ((Get-FileHash $ChemacsPath).Hash -Eq (Get-FileHash $EmacsPath).Hash) {
+        Write-Host "OK chemacs appears to already be copied over, you're all good."
+    } Else {
+        Write-Host ("WARN content is different between {0} and {1}" -f @($EmacsPath, $ChemacsPath))
+        
         $should_write = $False
 
         If ($Confirm) {
-            Write-Host "WARN chemacs may be installed OR something else may be in the way"
-            $ans = Read-Host ("Do you want to rewrite the {0} directory?" -f $EmacsPath)
+            Write-Host "WARN chemacs may already be installed OR something else may be in the way"
+            $ans = Read-Host ("Do you want to overwrite {0}?" -f $EmacsPath)
 
             If (@("y", "yes", "Y", "YES").Contains($ans)) {
                 $should_write = $True
@@ -171,27 +48,10 @@ If (-Not (Test-Path -Path $EmacsPath)) {
         }
 
         If ($should_write) {
-            $comparisons | ForEach-Object {
-                $status = $_.Status
-                $src = $_.SourceFile
-                $dest = $_.DestinationFile
-                Switch ($_.Status) {
-                    "new" {}
-                    "updated" {
-                        Copy-Item $src $dest | Out-Null
-                        Break;
-                    }
-                    "deleted" {
-                        Remove-Item $dest | Out-Null
-                        Break;
-                    }
-                }
-            } | Out-Null
+            Copy-Item $ChemacsPath $EmacsPath | Out-Null
             Write-Host "OK updated chemacs files successfully."
         } Else {
             Write-Host "WARN took no action."
         }
-    } Else {
-        Write-Host "OK chemacs appears to already be copied over, you're all good."
     }
 }
