@@ -24,14 +24,14 @@ function Get-Hashes {
     param(
         [string] $Directory
     )
-    $Hashes = @{}
+    $hashes = @{}
 
     Get-ChildItem -Recurse $Directory | ForEach-Object {
       $relative = $_.FullName.Substring($Directory.length)
-      $Hashes[$relative] = (Get-FileHash $_.FullName).Hash
+      $hashes[$relative] = (Get-FileHash $_.FullName).Hash
     }
 
-    $Hashes
+    $hashes
 }
 
 function Get-Intersection {
@@ -82,24 +82,24 @@ function Compare-Directories {
         [switch]$Hidden = $False
     )
 
-    $SourceHashes = Get-Hashes -Directory $SourceDirectory -Hidden:$Hidden
-    $DestinationHashes = Get-Hashes -Directory $DestinationDirectory -Hidden:$Hidden
+    $sourceHashes = Get-Hashes -Directory $SourceDirectory -Hidden:$Hidden
+    $destinationHashes = Get-Hashes -Directory $DestinationDirectory -Hidden:$Hidden
 
     # Files that are in both directories and may have gotten updates
-    $SharedFiles = Get-Intersection -Left $SourceHashes -Right $DestinationHashes
+    $sharedFiles = Get-Intersection -Left $sourceHashes -Right $destinationHashes
     # Potentially files that are "new" in the source directory
-    $NewFiles = Get-Difference -Left $SourceHashes -Right $DestinationHashes
+    $newFiles = Get-Difference -Left $sourceHashes -Right $destinationHashes
     # Potentially files that got deleted in the source directory
-    $OldFiles = Get-Difference -Left $DestinationHashes -Right $SourceHashes
+    $oldFiles = Get-Difference -Left $destinationHashes -Right $sourceHashes
     
     $results = @()
 
-    ForEach ($file in $SharedFiles) {
+    ForEach ($file in $sharedFiles) {
       $comparison = [Comparison]::new()
       $comparison.File = $file
       $comparison.SourceFile = Join-Path $SourceDirectory $file
       $comparison.DestinationFile = Join-Path $DestinationDirectory $file
-      If ($SourceHashes[$file] -Eq $DestinationHashes[$file]) {
+      If ($sourceHashes[$file] -Eq $destinationHashes[$file]) {
         $comparison.Status = "current"
       } Else {
         $comparison.Status = "updated"
