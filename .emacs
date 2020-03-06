@@ -121,7 +121,8 @@
     ;; set a value for custom-file then don't touch it.
     (when (not custom-file)
       (setq custom-file custom-file-)
-      (load custom-file))))
+      (unless (equal custom-file init-file)
+        (load custom-file)))))
 
 (defun chemacs-check-command-line-args (args)
   (if args
