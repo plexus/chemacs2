@@ -1,6 +1,19 @@
 #!/bin/sh
 
-chemacs_path=$(realpath "$(dirname "$0")")
+chemacs_realpath() {
+    origpwd="$PWD"
+    cd "$(dirname "$1")"
+    link=$(readlink "$(basename "$1")")
+    while [ "$link" ]; do
+        cd "$(dirname "$link")"
+        link=$(readlink "$(basename "$1")")
+    done
+    realpath="$PWD/$(basename "$1")"
+    cd "$origpwd"
+    echo "$realpath"
+}
+
+chemacs_path=$(chemacs_realpath "$(dirname "$0")")
 
 main() {
     if [ -L "$HOME/.emacs" ]; then
