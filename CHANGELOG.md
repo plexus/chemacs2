@@ -1,4 +1,4 @@
-# 1.0 (2020-10-01)
+# 1.0 (2020-10-01 / 4dad0684)
 
 - Only load `custom-file` when it is different from `init-file` (prevent double loading of `init-file`)
 - Fixes to the install script for OS X
