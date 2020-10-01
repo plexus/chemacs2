@@ -1,3 +1,8 @@
+# Unreleased
+
+- Add support for early-init.el
+- Change installation from `~/.emacs` to `~/.emacs.d`
+
 # 1.0 (2020-10-01 / 4dad0684)
 
 - Only load `custom-file` when it is different from `init-file` (prevent double loading of `init-file`)
