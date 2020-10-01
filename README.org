@@ -32,10 +32,7 @@
 
 * Chemacs
 
-*This version 2 of Chemacs is a work in progress, it introduces necessary
-breaking changes to be able to support early-init.el, and may not yet work out
-of the box without some extra effort. For a solid, stable version head see the
-"classic" [[https://github.com/plexus/chemacs][Chemacs 1]].*
+*This version 2 of Chemacs is a work in progress, it introduces necessary breaking changes to be able to support early-init.el, and may not yet work out of the box without some extra effort. For a solid, stable version head see the "classic" [[https://github.com/plexus/chemacs][Chemacs 1]].*
 
 Chemacs 2 is an Emacs profile switcher, it makes it easy to run multiple Emacs
 configurations side by side.
