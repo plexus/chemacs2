@@ -1,4 +1,4 @@
-;;; chemacs-common.el --- -*- lexical-binding: t; -*-
+;;; chemacs.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;; ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ;;
@@ -16,27 +16,9 @@
 ;;
 ;; ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ;;
-;; Chemacs - Emacs Profile Switcher v0.1
+;; Chemacs - Emacs Profile Switcher
 ;;
-;; INSTALLATION
-;;
-;; Install this file as ~/.emacs . Next time you start Emacs it will create a
-;; ~/.emacs-profiles.el , with a single "default" profile
-;;
-;;     (("default" . ((user-emacs-directory . "~/.emacs.d"))))
-;;
-;; Now you can start Emacs with `--with-profile' to pick a specific profile. A
-;; more elaborate example:
-;;
-;;     (("default"                      . ((user-emacs-directory . "~/emacs-profiles/plexus")))
-;;      ("spacemacs"                    . ((user-emacs-directory . "~/github/spacemacs")
-;;                                         (server-name . "spacemacs")
-;;                                         (custom-file . "~/.spacemacs.d/custom.el")
-;;                                         (env . (("SPACEMACSDIR" . "~/.spacemacs.d"))))))
-;;
-;; If you want to change the default profile used (so that, for example, a
-;; GUI version of Emacs uses the profile you want), you can also put the name
-;; of that profile in a ~/.emacs-profile file
+;; See README.md for instructions.
 
 ;; ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ;; this must be here to keep the package system happy, normally you do
@@ -49,8 +31,7 @@
 (defvar chemacs-default-profile-path "~/.emacs-profile")
 
 (when (not (file-exists-p chemacs-profiles-path))
-  (with-temp-file chemacs-profiles-path
-    (insert "((\"default\" . ((user-emacs-directory . \"~/.emacs.d\"))))")))
+  (error "[chemacs] %s does not exist." chemacs-profiles-path))
 
 (defvar chemacs-emacs-profiles
   (with-temp-buffer
@@ -91,7 +72,7 @@
   (alist-get key (chemacs-get-emacs-profile chemacs-current-emacs-profile)
              default))
 
-(defun chemacs-load-profile (profile early-init-p)
+(defun chemacs-load-profile (profile)
   (when (not (chemacs-get-emacs-profile profile))
     (error "No profile `%s' in %s" profile chemacs-profiles-path))
   (setq chemacs-current-emacs-profile profile)
@@ -100,8 +81,7 @@
          (init-file       (expand-file-name "init.el" emacs-directory))
          (custom-file-    (chemacs-emacs-profile-key 'custom-file init-file))
          (server-name-    (chemacs-emacs-profile-key 'server-name))
-         (early-init-file (expand-file-name "early-init.el" emacs-directory))
-         )
+         (early-init-file (expand-file-name "early-init.el" emacs-directory)))
     (setq user-emacs-directory emacs-directory)
 
     ;; Allow multiple profiles to each run their server
@@ -114,9 +94,10 @@
               (setenv (car env) (cdr env)))
             (chemacs-emacs-profile-key 'env))
 
-    (if early-init-p
+    (if (and (boundp 'chemacs-early-init) chemacs-early-init)
         (when (file-exists-p early-init-file)
-          (load early-init-file))
+          (load early-init-file)
+          (setq chemacs-early-init nil))
       (when (chemacs-emacs-profile-key 'straight-p)
         (chemacs-load-straight))
 
@@ -130,7 +111,7 @@
         (unless (equal custom-file init-file)
           (load custom-file))))))
 
-(defun chemacs-check-command-line-args (args early-init-p)
+(defun chemacs-check-command-line-args (args)
   (if args
       ;; Handle either `--with-profile profilename' or
       ;; `--with-profile=profilename'
@@ -144,14 +125,16 @@
                             '("--with-profile" .
                               (lambda (_) (pop command-line-args-left))))
                ;; Load the profile
-               (chemacs-load-profile (cadr args) early-init-p))
+               (chemacs-load-profile (cadr args)))
 
               ;; Similar handling for `--with-profile=profilename'
               ((equal (car s) "--with-profile")
                (add-to-list 'command-switch-alist `(,(car args) . (lambda (_))))
-               (chemacs-load-profile (mapconcat 'identity (cdr s) "=") early-init-p))
+               (chemacs-load-profile (mapconcat 'identity (cdr s) "=")))
 
-              (t (chemacs-check-command-line-args (cdr args) early-init-p))))
+              (t (chemacs-check-command-line-args (cdr args)))))
 
     ;; If no profile given, load the "default" profile
-    (chemacs-load-profile (chemacs-detect-default-profile) early-init-p)))
+    (chemacs-load-profile (chemacs-detect-default-profile))))
+
+(chemacs-check-command-line-args command-line-args)

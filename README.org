@@ -62,48 +62,27 @@ various edge cases and use cases that come up.
 
 ** Installation
 
-Clone the Git repository, and run =install.sh=
+Clone the Chemacs 2 repository as =$HOME/.emacs.d=. Note that if you already
+have an Emacs setup in =~/.emacs.d= you need to move it out of the way first. If
+you have an =~/.emacs= startup script then move that out of the way as well.
 
 #+BEGIN_SRC shell
-$ git clone https://github.com/plexus/chemacs.git
-$ cd chemacs
-$ ./install.sh
-OK      Creating symlink ~/.emacs -> /home/arne/chemacs/.emacs
+  [ -f ~/.emacs ] && mv ~/.emacs ~/.emacs.bak
+  [ -d ~/.emacs.d ] && mv ~/.emacs.d ~/.emacs.default
+  git clone https://github.com/plexus/chemacs2.git ~/.emacs.d
 #+END_SRC
 
-The install script will symlink =~/.emacs= to the Chemacs script. If you
-already have a =~/.emacs= you need to move it out of the way first
+Note that this is different from Chemacs 1. Before Chemacs installed itself as
+=~/.emacs= and you could have your own default setup in =~/.emacs.d=. This
+approach no longer works because of =~/.emacs.d/early-init.el=, so Chemacs 2
+needs to be installed as =~/.emacs.d=.
 
-#+BEGIN_SRC shell
-$ ./install.sh
-WARN    chemacs can't be installed, ~/.emacs is in the way
-#+END_SRC
+Next you will need to create a =~/.emacs-profiles.el= file, for details see
+below.
 
-By symlinking you can easily update Chemacs with a =git pull=. Chemacs is not
-available on ELPA/MELPA because its special position in the Emacs boot process
-would cause a chicken and egg problem.
-
-There's a similar script for Windows called =install.ps1=.
-
-#+BEGIN_SRC powershell
-$ git clone https://github.com/plexus/chemacs.git
-$ cd chemacs
-$ .\install.ps1
-OK copying file to ~/.emacs
-#+END_SRC
-
-The Windows script copies the ~/.emacs file rather than symlinking it, as
-symlinks in Windows require elevated privileges. To update the file, run
-=install.ps1= a second time, if necessary - it uses hashing to detect
-changes and prompts for conformation before overwriting
-
-#+BEGIN_SRC powershell
-$ .\install.ps1
-WARN content is different between C:\Users\Me\.emacs and C:\Users\Me\repos\chemacs\.emacs
-WARN chemacs may already be installed OR something else may be in the way
-Do you want to overwrite C:\Users\Me\.emacs?: y
-OK updated chemacs files successfully.
-#+END_SRC
+#+begin_src emacs-lisp
+  (("default" . ((user-emacs-directory . "~/.emacs.default"))))
+#+end_src
 
 ** Usage
 
@@ -127,7 +106,7 @@ names, and the values/cdrs their configuration.
 The main thing to configure is the =user-emacs-directory=
 
 #+BEGIN_SRC emacs-lisp
-  (("default" . ((user-emacs-directory . "~/.emacs.d")))
+  (("default" . ((user-emacs-directory . "~/.emacs.default")))
    ("spacemacs" . ((user-emacs-directory . "~/spacemacs"))))
 #+END_SRC
 
