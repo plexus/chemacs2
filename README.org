@@ -87,12 +87,9 @@ below.
 ** Usage
 
 Chemacs adds an extra command line option to Emacs, =--with-profile=. Profiles
-are configured in =~/.emacs-profiles.el=. If this file does not exist
-Chemacs will create it with a default profile pointing at =~/.emacs.d=.
+are configured in =~/.emacs-profiles.el=.
 
-If no profile is given at the command line then the default profile is used, so
-if you currently have your emacs configuration in =~/.emacs.d= then Chemacs
-will, by default, use your existing configuration.
+If no profile is given at the command line then the =default= profile is used.
 
 #+BEGIN_SRC shell
 $ emacs --with-profile my-profile
@@ -139,7 +136,7 @@ can be set using a =~/.emacs-profile= file.
 If your =~/.emacs-profiles.el= file contains the following:
 
 #+BEGIN_SRC emacs-lisp
-  (("default" . ((user-emacs-directory . "~/.emacs.d")))
+  (("default" . ((user-emacs-directory . "~/.emacs.default")))
    ("spacemacs" . ((user-emacs-directory . "~/spacemacs")))
    ("prelude" . ((user-emacs-directory . "~/prelude"))))
 #+END_SRC
