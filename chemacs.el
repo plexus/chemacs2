@@ -1,4 +1,4 @@
-;;; chemacs-common.el --- -*- lexical-binding: t; -*-
+;;; chemacs.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;; ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ;;
@@ -18,25 +18,7 @@
 ;;
 ;; Chemacs - Emacs Profile Switcher
 ;;
-;; INSTALLATION
-;;
-;; Install this file as ~/.emacs . Next time you start Emacs it will create a
-;; ~/.emacs-profiles.el , with a single "default" profile
-;;
-;;     (("default" . ((user-emacs-directory . "~/.emacs.d"))))
-;;
-;; Now you can start Emacs with `--with-profile' to pick a specific profile. A
-;; more elaborate example:
-;;
-;;     (("default"                      . ((user-emacs-directory . "~/emacs-profiles/plexus")))
-;;      ("spacemacs"                    . ((user-emacs-directory . "~/github/spacemacs")
-;;                                         (server-name . "spacemacs")
-;;                                         (custom-file . "~/.spacemacs.d/custom.el")
-;;                                         (env . (("SPACEMACSDIR" . "~/.spacemacs.d"))))))
-;;
-;; If you want to change the default profile used (so that, for example, a
-;; GUI version of Emacs uses the profile you want), you can also put the name
-;; of that profile in a ~/.emacs-profile file
+;; See README.md for instructions.
 
 ;; ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ;; this must be here to keep the package system happy, normally you do
@@ -49,8 +31,7 @@
 (defvar chemacs-default-profile-path "~/.emacs-profile")
 
 (when (not (file-exists-p chemacs-profiles-path))
-  (with-temp-file chemacs-profiles-path
-    (insert "((\"default\" . ((user-emacs-directory . \"~/.emacs.d\"))))")))
+  (error "[chemacs] %s does not exist." chemacs-profiles-path))
 
 (defvar chemacs-emacs-profiles
   (with-temp-buffer
