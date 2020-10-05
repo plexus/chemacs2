@@ -1,4 +1,4 @@
-;;; .emacs --- -*- lexical-binding: t; -*-
+;;; early-init.el --- -*- lexical-binding: t; -*-
 
 (let ((chemacs-directory
        (file-name-directory (file-truename load-file-name))))
