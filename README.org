@@ -197,7 +197,7 @@ Please refer to [[https://github.com/plexus/chemacs/issues/5][this]] discussion 
 
 ** FreeDesktop Directories
 
-Both =~/.emacs-profiles.el= and =~/.emacs-profile= can also be stored under =$XDG\_CONFIG\_HOME/chemacs= (typically =~/.config/chemacs=) as =$XGD\_CONFIG\_HOME/chemacs/profiles.el= and =$XDG\_CONFIG\_HOME/chemacs/profile= respectively.
+Both =~/.emacs-profiles.el= and =~/.emacs-profile= can also be stored under =$XDG_CONFIG_HOME/chemacs= (typically =~/.config/chemacs=) as =$XGD_CONFIG_HOME/chemacs/profiles.el= and =$XDG_CONFIG_HOME/chemacs/profile= respectively.
 
 ** LICENSE
 
