@@ -2,6 +2,7 @@
 
 - Add support for early-init.el
 - Change installation from `~/.emacs` to `~/.emacs.d`
+- Allow .emacs-profiles and .emacs-profile to be stored in $XDG\_CONFIG\_HOME/chemacs
 
 # 1.0 (2020-10-01 / 4dad0684)
 
