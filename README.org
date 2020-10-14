@@ -195,6 +195,10 @@ In the following snippet =~/doom-emacs= is where you have cloned doom emacs.
 
 Please refer to [[https://github.com/plexus/chemacs/issues/5][this]] discussion for details.
 
+** FreeDesktop Directories
+
+Both =~/.emacs-profiles.el= and =~/.emacs-profile= can also be stored under =$XDG_CONFIG_HOME/chemacs= (typically =~/.config/chemacs=) as =$XGD_CONFIG_HOME/chemacs/profiles.el= and =$XDG_CONFIG_HOME/chemacs/profile= respectively.
+
 ** LICENSE
 
 Copyright © Arne Brasseur 2018-2020
