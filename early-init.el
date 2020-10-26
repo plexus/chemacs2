@@ -1,10 +1,7 @@
 ;;; early-init.el --- -*- lexical-binding: t; -*-
 
-(let ((chemacs-directory
-       (file-name-directory (file-truename load-file-name))))
-  (load (expand-file-name "chemacs.el" chemacs-directory)))
-
-;; Check for a --with-profile flag and honor it; otherwise load the
-;; default profile.
-(defvar chemacs-early-init t)
-(chemacs-check-command-line-args command-line-args)
+(require 'chemacs
+         (expand-file-name "chemacs.el"
+                           (file-name-directory
+                            (file-truename load-file-name))))
+(chemacs-load-user-early-init)
