@@ -21,6 +21,8 @@
 ;; See README.md for instructions.
 
 ;;; Code:
+(require 'seq)
+
 (defvar chemacs-version "2.0")
 (defvar config-home (or (getenv "XDG_CONFIG_HOME") "~/.config"))
 (defvar chemacs-profiles-paths (list "~/.emacs-profiles.el" (format "%s/%s" config-home "chemacs/profiles.el" )))
