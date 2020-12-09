@@ -31,18 +31,6 @@
 (defvar chemacs-profiles-path (or (car (seq-filter 'file-exists-p chemacs-profiles-paths)) (car chemacs-profiles-paths)))
 (defvar chemacs-default-profile-path (or (car (seq-filter 'file-exists-p chemacs-default-profile-paths)) (car chemacs-default-profile-paths)))
 
-(when (not (file-exists-p chemacs-profiles-path))
-  (error "[chemacs] %s does not exist." chemacs-profiles-path))
-
-(defvar chemacs-default-profile-name
-  (if (file-exists-p chemacs-default-profile-path)
-      (with-temp-buffer
-        (insert-file-contents chemacs-default-profile-path)
-        (goto-char (point-min))
-        ;; (buffer-string))
-        (symbol-name (read (current-buffer)) ))
-    "default"))
-
 (defun chemacs-handle-command-line (args)
   (when args
     ;; Handle either --with-profile profilename or
@@ -65,20 +53,52 @@
 
             (t (chemacs-handle-command-line (cdr args)))))))
 
+(defvar chemacs--with-profile-value
+  (let* ((value (chemacs-handle-command-line command-line-args))
+         (read-value (read value)))
+    (when value
+      (if (listp read-value)
+          read-value
+        value))))
+
+(defvar chemacs-literal-profile-provided
+  (and chemacs--with-profile-value
+       (listp chemacs--with-profile-value)))
+
+(unless (or (file-exists-p chemacs-profiles-path)
+            (and chemacs--with-profile-value
+                 (listp chemacs--with-profile-value)))
+  (error "[chemacs] %s does not exist." chemacs-profiles-path))
+
+(defvar chemacs-default-profile-name
+  (if (file-exists-p chemacs-default-profile-path)
+      (with-temp-buffer
+        (insert-file-contents chemacs-default-profile-path)
+        (goto-char (point-min))
+        ;; (buffer-string))
+        (symbol-name (read (current-buffer)) ))
+    "default"))
+
+
 (defvar chemacs-profile-name
-  (let ((name (chemacs-handle-command-line command-line-args)))
-    (if name name chemacs-default-profile-name)))
+  (if (and chemacs--with-profile-value
+           (stringp chemacs--with-profile-value))
+      chemacs--with-profile-value
+    chemacs-default-profile-name))
 
 (defvar chemacs-profile
-  (let ((profiles
+  (if (and chemacs--with-profile-value
+           (listp chemacs--with-profile-value))
+      chemacs--with-profile-value
+      (let ((profiles
          (with-temp-buffer
            (insert-file-contents chemacs-profiles-path)
            (goto-char (point-min))
            (read (current-buffer)))))
-    (cdr (assoc chemacs-profile-name profiles))))
+    (cdr (assoc chemacs-profile-name profiles)))))
 
 (unless chemacs-profile
-  (error "No profile `%s' in %s" profile chemacs-profiles-path))
+  (error "No profile `%s' in %s" chemacs-profile-name chemacs-profiles-path))
 
 (defun chemacs-profile-get (key &optional default)
   (alist-get key chemacs-profile default))
