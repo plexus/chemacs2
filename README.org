@@ -95,6 +95,12 @@ If no profile is given at the command line then the =default= profile is used.
 $ emacs --with-profile my-profile
 #+END_SRC
 
+There is an option for using profile that is not preconfigured in =~/.emacs-profiles.el=. To accomplish that you can directly provide the profile via the command line, like so
+#+BEGIN_SRC shell
+$ emacs --with-profile '((user-emacs-directory . "/path/to/config"))'
+#+END_SRC
+This method supports all the profile options given below.
+
 ** .emacs-profiles.el
 
 This file contains an association list, with the keys/cars being the profile
