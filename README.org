@@ -32,12 +32,22 @@
 
 * Chemacs
 
-*This version 2 of Chemacs is a work in progress, it introduces necessary breaking changes to be able to support early-init.el, and may not yet work out of the box without some extra effort. For a solid, stable version head see the "classic" [[https://github.com/plexus/chemacs][Chemacs 1]].*
-
 Chemacs 2 is an Emacs profile switcher, it makes it easy to run multiple Emacs
 configurations side by side.
 
 Think of it as a bootloader for Emacs.
+
+** Differences from Chemacs 1
+
+Emacs intialization used to have a single entry point, either =~/.emacs= or
+=~/.emacs.d/init.el=. More recent Emacsen have introduced a second startup
+script, =~/.emacs/early-init.el=, which runs earlier in the boot process, and
+can be used for things that should happen very early on, like tweaking the GC,
+or disabling UI elements.
+
+Chemacs 2 supports =early-init.el=, Chemacs 1 does not. This does also imply
+that Chemacs 2 needs to be installed as =~/.emacs.d= (a directory), rather than
+simply linking it to =~/.emacs= (a single file).
 
 ** Rationale
 
