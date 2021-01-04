@@ -131,10 +131,12 @@
     (load init-file t t)
     ;; Prevent customize from changing ~/.emacs (this file), but if
     ;; init.el has set a value for custom-file then don't touch it.
-    (let ((custom-file- (chemacs-profile-get 'custom-file init-file)))
+    (let ((chemacs-custom-file (chemacs-profile-get 'custom-file init-file)))
       (when (not custom-file)
-        (setq custom-file custom-file-)
+        (setq custom-file chemacs-custom-file)
         (unless (equal custom-file init-file)
+          (unless (file-exists-p custom-file)
+            (with-temp-buffer (write-file custom-file)))
           (load custom-file))))))
 
 (defun chemacs-load-straight ()
