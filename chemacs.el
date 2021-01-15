@@ -20,16 +20,30 @@
 ;;
 ;; See README.md for instructions.
 
-;;; Code:
-(require 'seq)
+;; NOTE Don't require any libraries in this file. When emacs loads a library that
+;; is byte compiled, it may start native-compiling it, so if we require anything
+;; here, native compilation can start before the user has had a chance to configure
+;; it in their init files.
 
+;;; Code:
 (defvar chemacs-version "2.0")
 (defvar config-home (or (getenv "XDG_CONFIG_HOME") "~/.config"))
 (defvar chemacs-profiles-paths (list "~/.emacs-profiles.el" (format "%s/%s" config-home "chemacs/profiles.el" )))
 (defvar chemacs-default-profile-paths (list "~/.emacs-profile" (format "%s/%s" config-home "chemacs/profile")))
 
-(defvar chemacs-profiles-path (or (car (seq-filter 'file-exists-p chemacs-profiles-paths)) (car chemacs-profiles-paths)))
-(defvar chemacs-default-profile-path (or (car (seq-filter 'file-exists-p chemacs-default-profile-paths)) (car chemacs-default-profile-paths)))
+;; Copy `seq' library's `seq-filter' to avoid requiring it, see note above.
+(defun chemacs--seq-filter (pred sequence)
+  (let ((exclude (make-symbol "exclude")))
+    (delq exclude (mapcar (lambda (elt)
+                            (if (funcall pred elt)
+                                elt
+                              exclude))
+                          sequence))))
+
+(defvar chemacs-profiles-path (or (car (chemacs--seq-filter #'file-exists-p chemacs-profiles-paths))
+                                  (car chemacs-profiles-paths)))
+(defvar chemacs-default-profile-path (or (car (chemacs--seq-filter #'file-exists-p chemacs-default-profile-paths))
+                                         (car chemacs-default-profile-paths)))
 
 (defun chemacs-handle-command-line (args)
   (when args
