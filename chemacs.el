@@ -142,6 +142,7 @@
 (defun chemacs-load-user-init ()
   (when (chemacs-profile-get 'straight-p) (chemacs-load-straight))
   (let ((init-file (expand-file-name "init.el" user-emacs-directory)))
+    (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
     (load init-file t t)
     ;; Prevent customize from changing ~/.emacs (this file), but if
     ;; init.el has set a value for custom-file then don't touch it.
