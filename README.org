@@ -215,6 +215,9 @@ Please refer to [[https://github.com/plexus/chemacs/issues/5][this]] discussion 
 
 Both =~/.emacs-profiles.el= and =~/.emacs-profile= can also be stored under =$XDG_CONFIG_HOME/chemacs= (typically =~/.config/chemacs=) as =$XGD_CONFIG_HOME/chemacs/profiles.el= and =$XDG_CONFIG_HOME/chemacs/profile= respectively.
 
+Further, as indicated by the [[http://git.savannah.gnu.org/cgit/emacs.git/tree/etc/NEWS?h=emacs-27][Emacs 27.1 changelog]], Emacs is now compatible with XDG Standards, looking for its configuration files in =${XDG_CONFIG_HOME}/emacs= directory too (provided the traditional =~/.emacs.d= and =~/.emacs= does not exist).
+Therefore, it is perfectly viable to install Chemacs 2 in =${XDG_CONFIG_HOME}/emacs= (usually =~/.config/emacs=) directory - with the aforementioned caveat: _the directory =~/.emacs.d"= and the file ="~/.emacs"= does not exist_.
+
 ** LICENSE
 
 Copyright © Arne Brasseur 2018-2020
