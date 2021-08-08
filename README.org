@@ -99,7 +99,9 @@ below.
 Chemacs adds an extra command line option to Emacs, =--with-profile=. Profiles
 are configured in =~/.emacs-profiles.el=.
 
-If no profile is given at the command line then the =default= profile is used.
+If no profile is given at the command line then the environment variable
+CHEMACS_PROFILE is used. If this environment variables isn't set then the
+=default= profile is used.
 
 #+BEGIN_SRC shell
 $ emacs --with-profile my-profile
@@ -146,8 +148,9 @@ for a helpful script to do that.
 
 ** Changing the default profile (e.g. for GUI editors)
 
-Where it is not possible to use the =--with-profile= flag, the default profile
-can be set using a =~/.emacs-profile= file.
+Where it is not possible to use the =--with-profile= flag or the CHEMACS_PROFILE
+environment variable, the default profile can be set using a =~/.emacs-profile=
+file.
 
 If your =~/.emacs-profiles.el= file contains the following:
 
