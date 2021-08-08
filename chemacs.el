@@ -30,6 +30,7 @@
 (defvar config-home (or (getenv "XDG_CONFIG_HOME") "~/.config"))
 (defvar chemacs-profiles-paths (list "~/.emacs-profiles.el" (format "%s/%s" config-home "chemacs/profiles.el" )))
 (defvar chemacs-default-profile-paths (list "~/.emacs-profile" (format "%s/%s" config-home "chemacs/profile")))
+(defvar chemacs-profile-env-var "CHEMACS_PROFILE")
 
 ;; Copy `seq' library's `seq-filter' to avoid requiring it, see note above.
 (defun chemacs--seq-filter (pred sequence)
@@ -95,10 +96,12 @@
 
 
 (defvar chemacs-profile-name
-  (if (and chemacs--with-profile-value
-           (stringp chemacs--with-profile-value))
-      chemacs--with-profile-value
-    chemacs-default-profile-name))
+  (let ((env-profile-value (getenv chemacs-profile-env-var)))
+    (cond ((and chemacs--with-profile-value
+                (stringp chemacs--with-profile-value))
+           chemacs--with-profile-value)
+          (env-profile-value env-profile-value)
+          (t chemacs-default-profile-name))))
 
 (defvar chemacs-profile
   (if (and chemacs--with-profile-value
