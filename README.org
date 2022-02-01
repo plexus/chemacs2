@@ -218,6 +218,39 @@ Both =~/.emacs-profiles.el= and =~/.emacs-profile= can also be stored under =$XD
 Further, as indicated by the [[http://git.savannah.gnu.org/cgit/emacs.git/tree/etc/NEWS?h=emacs-27][Emacs 27.1 changelog]], Emacs is now compatible with XDG Standards, looking for its configuration files in =${XDG_CONFIG_HOME}/emacs= directory too (provided the traditional =~/.emacs.d= and =~/.emacs= does not exist).
 Therefore, it is perfectly viable to install Chemacs 2 in =${XDG_CONFIG_HOME}/emacs= (usually =~/.config/emacs=) directory - with the aforementioned caveat: _the directory =~/.emacs.d"= and the file ="~/.emacs"= does not exist_.
 
+** Example: emacs as daemon
+- Profiles
+You can add an entry similar to the following to your =.emacs-profiles.el=
+#+BEGIN_SRC emacs-lisp
+;; your custom or vanilla emacs profile
+(("default" . ((user-emacs-directory . "~/.gnu-emacs")
+	       (server-name . "gnu")
+	       ))
+
+;; emacs distribution: DOOM-emacs
+("doom" . ((user-emacs-directory . "~/.doom-emacs")
+	   (server-name . "doom")
+	   (env . (("DOOMDIR" . "~/.doom.d")))
+	     ))
+  )
+#+END_SRC
+
+- daemon
+Set emacs daemon to always run in background
+#+begin_src bash
+# vanilla
+emacs --daemon &
+# Doom emacs
+emacs --with-profile doom --daemon &
+#+end_src
+
+- emacsclient
+create a new frame, connect to the socket and use vanilla emacs as fallback
+#+begin_src bash
+emacsclient -c -s gnu -a emacs
+emacsclient -c -s doom -a emacs
+#+end_src
+
 ** LICENSE
 
 Copyright © Arne Brasseur 2018-2020
