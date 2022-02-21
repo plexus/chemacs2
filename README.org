@@ -264,7 +264,7 @@ First, make sure you haven't hardcoded filepaths to "emacs.d" in your configurat
 
 Second, if the issue persists you should delete the `build` folder in your `straight` directory and rebuild your dependencies.
 
-If the issue persists please file an issue because we are still trying to figure out the exact source of this problem, but this has solved the problem for some users.
+If the issue persists please [[https://github.com/plexus/chemacs2/issues/31][comment on the issue]], because we are still trying to figure out the exact source of this problem, but this has solved the problem for some users.
 
 ** LICENSE
 
