@@ -254,6 +254,7 @@ emacsclient -c -s doom -a emacs
 ** Troubleshooting
 
 *** Emacs cannot find packages installed by straight
+Some users have [[https://github.com/plexus/chemacs2/issues/31][reported issues]] where packages installed by `straight.el` can no longer be found after switching to using `chemacs`.
 
 First, make sure you haven't hardcoded filepaths to "emacs.d" in your configuration. You should reference files inside a profile-specific emacs folder like this:
 
