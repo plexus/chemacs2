@@ -251,6 +251,21 @@ emacsclient -c -s gnu -a emacs
 emacsclient -c -s doom -a emacs
 #+end_src
 
+** Troubleshooting
+
+*** Emacs cannot find packages installed by straight
+Some users have [[https://github.com/plexus/chemacs2/issues/31][reported issues]] where packages installed by `straight.el` can no longer be found after switching to using `chemacs`.
+
+First, make sure you haven't hardcoded filepaths to "emacs.d" in your configuration. You should reference files inside a profile-specific emacs folder like this:
+
+#+begin_src elisp
+(setq some-var (expand-file-name "path/to/file" user-emacs-directory))
+#+END_SRC
+
+Second, if the issue persists you should delete the `build` folder in your `straight` directory and rebuild your dependencies.
+
+If the issue persists please file an issue because we are still trying to figure out the exact source of this problem, but this has solved the problem for some users.
+
 ** LICENSE
 
 Copyright © Arne Brasseur 2018-2020
