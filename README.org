@@ -41,7 +41,7 @@ Think of it as a bootloader for Emacs.
 
 Emacs intialization used to have a single entry point, either =~/.emacs= or
 =~/.emacs.d/init.el=. More recent Emacsen have introduced a second startup
-script, =~/.emacs/early-init.el=, which runs earlier in the boot process, and
+script, =~/.emacs.d/early-init.el=, which runs earlier in the boot process, and
 can be used for things that should happen very early on, like tweaking the GC,
 or disabling UI elements.
 
