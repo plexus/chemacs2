@@ -91,7 +91,7 @@
         (insert-file-contents chemacs-default-profile-path)
         (goto-char (point-min))
         ;; (buffer-string))
-        (symbol-name (read (current-buffer)) ))
+        (symbol-name (read (current-buffer))))
     "default"))
 
 
@@ -107,12 +107,15 @@
   (if (and chemacs--with-profile-value
            (listp chemacs--with-profile-value))
       chemacs--with-profile-value
-      (let ((profiles
-         (with-temp-buffer
-           (insert-file-contents chemacs-profiles-path)
-           (goto-char (point-min))
-           (read (current-buffer)))))
-    (cdr (assoc chemacs-profile-name profiles)))))
+    (let ((profiles
+           (with-temp-buffer
+             (insert-file-contents chemacs-profiles-path)
+             (goto-char (point-min))
+             (condition-case err
+                 (read (current-buffer))
+               (error
+                (error "Failed to parse %s: %s" chemacs-profiles-path (error-message-string err)))))))
+      (cdr (assoc chemacs-profile-name profiles)))))
 
 (unless chemacs-profile
   (error "No profile `%s' in %s" chemacs-profile-name chemacs-profiles-path))
