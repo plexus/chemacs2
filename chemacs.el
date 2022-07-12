@@ -28,7 +28,7 @@
 ;;; Code:
 (defvar chemacs-version "2.0")
 (defvar config-home (or (getenv "XDG_CONFIG_HOME") "~/.config"))
-(defvar chemacs-profiles-paths (list "~/.emacs-profiles.el" (format "%s/%s" config-home "chemacs/profiles.el" )))
+(defvar chemacs-profiles-paths (list "~/.emacs-profiles.el" (format "%s/%s" config-home "chemacs/profiles.el")))
 (defvar chemacs-default-profile-paths (list "~/.emacs-profile" (format "%s/%s" config-home "chemacs/profile")))
 (defvar chemacs-profile-env-var "CHEMACS_PROFILE")
 
@@ -103,19 +103,20 @@
           (env-profile-value env-profile-value)
           (t chemacs-default-profile-name))))
 
+(defvar chemacs-profiles
+  (with-temp-buffer
+    (insert-file-contents chemacs-profiles-path)
+    (goto-char (point-min))
+    (condition-case err
+        (read (current-buffer))
+      (error
+       (error "Failed to parse %s: %s" chemacs-profiles-path (error-message-string err))))))
+
 (defvar chemacs-profile
   (if (and chemacs--with-profile-value
            (listp chemacs--with-profile-value))
       chemacs--with-profile-value
-    (let ((profiles
-           (with-temp-buffer
-             (insert-file-contents chemacs-profiles-path)
-             (goto-char (point-min))
-             (condition-case err
-                 (read (current-buffer))
-               (error
-                (error "Failed to parse %s: %s" chemacs-profiles-path (error-message-string err)))))))
-      (cdr (assoc chemacs-profile-name profiles)))))
+      (cdr (assoc chemacs-profile-name chemacs-profiles))))
 
 (unless chemacs-profile
   (error "No profile `%s' in %s" chemacs-profile-name chemacs-profiles-path))
