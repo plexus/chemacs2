@@ -46,27 +46,29 @@
 (defvar chemacs-default-profile-path (or (car (chemacs--seq-filter #'file-exists-p chemacs-default-profile-paths))
                                          (car chemacs-default-profile-paths)))
 
-(defun chemacs-handle-command-line (args)
+(defun chemacs-handle-command-line (args &optional pos)
+  "Handles either --with-profile profilename or --with-profile=profilename.
+Removes them from the command-line-args variable, and returns the
+selected profile (if any)."
   (when args
-    ;; Handle either --with-profile profilename or
-    ;; --with-profile=profilename
+    (or pos (setq pos 0))
     (let ((s (split-string (car args) "=")))
       (cond ((equal (car args) "--with-profile")
-             ;; This is just a no-op so Emacs knows --with-profile
-             ;; is a valid option. If we wait for
-             ;; command-switch-alist to be processed then
-             ;; after-init-hook has already run.
-             (add-to-list 'command-switch-alist
-                          '("--with-profile" .
-                            (lambda (_) (pop command-line-args-left))))
+             ;; remove 2 args and return the second of them
+             (chemacs-remove-command-line-args pos 2)
              (cadr args))
 
-            ;; Similar handling for `--with-profile=profilename'
             ((equal (car s) "--with-profile")
-             (add-to-list 'command-switch-alist `(,(car args) . (lambda (_))))
+             ;; remove 1 arg and return the second part of it
+             (chemacs-remove-command-line-args pos 1)
              (mapconcat 'identity (cdr s) "="))
 
-            (t (chemacs-handle-command-line (cdr args)))))))
+            (t (chemacs-handle-command-line (cdr args) (1+ pos)))))))
+
+(defun chemacs-remove-command-line-args (position number)
+  "Removes NUMBER elements from the `command-line-args' variable, starting on position POSITION."
+  (setf (nthcdr position command-line-args)
+        (nthcdr (+ position number) command-line-args)))
 
 (defvar chemacs--with-profile-value
   (let* ((value (chemacs-handle-command-line command-line-args))
