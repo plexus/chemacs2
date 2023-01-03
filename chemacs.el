@@ -129,7 +129,7 @@ selected profile (if any)."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq user-emacs-directory (file-name-as-directory
-                            (chemacs-profile-get 'user-emacs-directory)))
+                            (substitute-in-file-name (chemacs-profile-get 'user-emacs-directory))))
 
 ;; Allow multiple profiles to each run their server
 ;; use `emacsclient -s profile_name' to connect
@@ -139,7 +139,7 @@ selected profile (if any)."
 ;; Set environment variables, these are visible to init-file with
 ;; getenv
 (mapcar (lambda (env)
-          (setenv (car env) (cdr env)))
+          (setenv (car env) (substitute-in-file-name (cdr env))))
         (chemacs-profile-get 'env))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
