@@ -146,6 +146,7 @@ selected profile (if any)."
 
 (defun chemacs-load-user-early-init ()
   (let ((early-init-file (expand-file-name "early-init.el" user-emacs-directory)))
+    (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
     (load early-init-file t t)))
 
 (defun chemacs-load-user-init ()
