@@ -140,6 +140,14 @@ Other things you can configure
   visible to any subprocesses spawned from Emacs.
 - =straight-p= Enable the [[https://github.com/raxod502/straight.el][Straight]]
   functional package manager.
+- =nix-elisp-bundle= A directory containing elisp dependencies bundled by the
+  nix package manager. The bundle path can be produced by nix using an
+  expression like =(emacs.pkgs.withPackages (p: [ p.avy … ])).deps=.
+  Because the bundle path is in the nix store, if it is specified
+  in =.emacs-profiles.el= then that file should also be maintained by
+  nix, to prevent the path from being garbage-collected.
+  Alternatively, a nix-generated script or alias could specify
+  =nix-elisp-bundle= as a command-line argument.
 
 Store =.emacs-profiles.el= together with your dotfiles. If you're not yet keeping
 a version controlled directory of dotfiles, then check out
