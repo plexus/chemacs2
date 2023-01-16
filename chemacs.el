@@ -152,12 +152,12 @@ selected profile (if any)."
   (when dir
     (if (boundp 'package-directory-list)
 	(add-to-list 'package-directory-list
-		     (concat dir "/share/emacs/site-lisp/elpa"))
+		     (expand-file-name "share/emacs/site-lisp/elpa" dir))
       (add-to-list 'load-path
-		   (concat dir "/share/emacs/site-lisp")))
+		   (expand-file-name "share/emacs/site-lisp" dir)))
     (when (boundp 'native-comp-eln-load-path)
       (add-to-list 'native-comp-eln-load-path
-		   (concat dir "/share/emacs/native-lisp/")))))
+		   (expand-file-name "share/emacs/native-lisp/" dir)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
