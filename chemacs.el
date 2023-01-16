@@ -142,6 +142,23 @@ selected profile (if any)."
           (setenv (car env) (cdr env)))
         (chemacs-profile-get 'env))
 
+;; Insinuate a nix elisp dependency bundle, if specified. In Emacs 27, the
+;; startup.el looks through the load-path for any directory named site-lisp with
+;; a subdirectory named elpa. If found, it activates them as packages. Starting
+;; in Emacs 28, it instead relies on package-directory-list. It seems we can
+;; distinguish these by whether package-directory-list is already bound in
+;; early-init.
+(let ((dir (chemacs-profile-get 'nix-elisp-bundle)))
+  (when dir
+    (if (boundp 'package-directory-list)
+	(add-to-list 'package-directory-list
+		     (expand-file-name "share/emacs/site-lisp/elpa" dir))
+      (add-to-list 'load-path
+		   (expand-file-name "share/emacs/site-lisp" dir)))
+    (when (boundp 'native-comp-eln-load-path)
+      (add-to-list 'native-comp-eln-load-path
+		   (expand-file-name "share/emacs/native-lisp/" dir)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun chemacs-load-user-early-init ()
