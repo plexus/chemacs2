@@ -70,6 +70,11 @@ of how to add a command line option in userspace from Emacs Lisp.
 Chemacs tries to implement this idea in a user-friendly way, taking care of the
 various edge cases and use cases that come up.
 
+** Alternatives
+
+- Emacs 29 introduces [--init-directory](https://git.savannah.gnu.org/cgit/emacs.git/log/?qt=grep&q=init-directory)
+- [with-emacs.sh](https://github.com/alphapapa/with-emacs.sh) Emacs sandboxing shell script, works by adding a number of `--eval` flags to Emacs startup.
+
 ** Installation
 
 Clone the Chemacs 2 repository as =$HOME/.emacs.d=. Note that if you already
