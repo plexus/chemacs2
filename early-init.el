@@ -1,5 +1,6 @@
 ;;; early-init.el --- -*- lexical-binding: t; -*-
 
+(add-to-list 'default-frame-alist '(undecorated-round . t))
 (require 'chemacs
          (expand-file-name "chemacs.el"
                            (file-name-directory
